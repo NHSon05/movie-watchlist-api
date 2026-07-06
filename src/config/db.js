@@ -1,6 +1,13 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
+
+const connectionString = `${process.env.DATABASE_URL}`;
+const pool = new pg.Pool({ connectionString });
+const adapter = new PrismaPg(pool);
 
 const prisma = new PrismaClient({
+  adapter,
   log:
     process.env.NODE_ENV === 'development'
       ? ['query', 'error', 'warn', 'info']
@@ -10,7 +17,7 @@ const prisma = new PrismaClient({
 const connectDB = async () => {
   try {
     await prisma.$connect();
-    console.log('DB Connect vie Prisma');
+    console.log('DB Connect via Prisma');
   } catch (error) {
     console.error(`DB Connection Error: ${error.message}`);
     process.exit(1);
@@ -20,10 +27,10 @@ const connectDB = async () => {
 const disconnectDB = async () => {
   try {
     await prisma.$disconnect();
-    console.log('DB Disconnect vie Prisma');
+    console.log('DB Disconnect via Prisma');
   } catch (error) {
     console.error(`DB Disconnection Error: ${error.message}`);
     process.exit(1);
   }
 };
-export default { prisma, connectDB, disconnectDB };
+export { prisma, connectDB, disconnectDB };

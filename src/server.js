@@ -1,17 +1,22 @@
+import 'dotenv/config';
 import express from 'express';
-import { config } from 'dotenv';
 import { connectDB, disconnectDB } from './config/db.js';
 
 // import Routes
 import movieRoutes from './routes/movie.route.js';
+import authRoutes from './routes/auth.route.js';
 
-config();
 connectDB();
 
 const app = express();
 
+// Body parsing middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // API Routes
 app.use('/movies', movieRoutes);
+app.use('/auth', authRoutes);
 
 const PORT = 5001;
 // app sẽ chạy trên PORT này
@@ -39,8 +44,3 @@ process.on('SIGTERM', async () => {
   await disconnectDB();
   process.exit(0);
 });
-
-// Authentication - signin, signup
-// movie - getting all movie
-// user - profile
-// watchlist
