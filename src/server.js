@@ -5,6 +5,7 @@ import { connectDB, disconnectDB } from './config/db.js';
 // import Routes
 import movieRoutes from './routes/movie.route.js';
 import authRoutes from './routes/auth.route.js';
+import watchlistRouter from './routes/watchlist.route.js';
 
 connectDB();
 
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use('/movies', movieRoutes);
 app.use('/auth', authRoutes);
+app.use('/watchlist', watchlistRouter);
 
 const PORT = 5001;
 // app sẽ chạy trên PORT này

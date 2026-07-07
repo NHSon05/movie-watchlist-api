@@ -112,13 +112,31 @@ const movies = [
 ];
 
 const main = async () => {
-  console.log('Seeding Movie...');
+  console.log('Seeding...');
+
+  // 1. Upsert seed user (required for Movie.createdBy foreign key)
+  await prisma.user.upsert({
+    where: { id: userId },
+    update: {},
+    create: {
+      id: userId,
+      name: 'Admin Seed',
+      email: 'admin@seed.com',
+      password: 'password_seed',
+      role: 'admin',
+    },
+  });
+  console.log(`Seed user verified: ${userId}`);
+
+  // 2. Clear and re-insert movies
+  await prisma.movie.deleteMany();
+  console.log('Cleared existing movies.');
+
   for (const movie of movies) {
-    await prisma.movie.create({
-      data: movie,
-    });
-    console.log(`Create movie: ${movie.title}`);
+    await prisma.movie.create({ data: movie });
+    console.log(`Created movie: ${movie.title}`);
   }
+
   console.log('Seeding Completed');
 };
 
