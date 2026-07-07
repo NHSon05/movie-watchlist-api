@@ -31,13 +31,13 @@ model Movie {
   overview    String?
   releaseYear Int
   genres      String[] @default([])
-  runtime     Int[]
-  postertUrl  String?
-  createBy    String
-  createAt    DateTime @default(now())
-  updateAt    DateTime @updatedAt
+  runtime     Int?
+  posterUrl  String?
+  createdBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  creator User @relation("MovieCreator", fields: [createBy], references: [id], onDelete: Cascade)
+  creator User @relation("MovieCreator", fields: [createdBy], references: [id], onDelete: Cascade)
   watchlistItems WatchlistItem[]
 }
 
@@ -48,8 +48,8 @@ model WatchlistItem {
   status   WatchlistItemStatus @default(PLANNED)
   rating   Int?
   notes    String?
-  createAt DateTime            @default(now())
-  updateAt DateTime            @updatedAt
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
 
   // Relation
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
