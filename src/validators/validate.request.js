@@ -1,0 +1,24 @@
+import { HTTP_STATUS } from '../constants/httpStatus';
+
+export const validateRequest = (schema) => {
+  return (req, res, next) => {
+    const result = schema.safeParse(req.body);
+
+    if (!result.success) {
+      const formatted = result.error.format();
+      const flatErrors = Object.values(formatted)
+        .flat()
+        .filter(Boolean)
+        .map((err) => err._errors)
+        .flat();
+
+      console.log(flatErrors);
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .json({ message: flatErrors.join(', ') });
+    }
+
+    // req.body = result.data;
+    next();
+  };
+};
